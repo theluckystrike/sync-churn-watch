@@ -1,4 +1,4 @@
-import { Notice, Plugin, TFile, normalizePath } from 'obsidian';
+import { Notice, Plugin, TFile, debounce, normalizePath } from 'obsidian';
 import type { SponsorsManager } from './license/index';
 import { createGitHubSponsors } from './license/github-obsidian';
 import { SPONSORS, PRO_LABEL, SYNC_LABEL, bindPro, isPro, onProChange, resetPro } from './pro';
@@ -18,12 +18,14 @@ export default class SyncChurnWatchPlugin extends Plugin {
 	private notices = new Set<string>();
 	private status: HTMLElement | null = null;
 	private settingTab: SyncChurnWatchSettingTab | null = null;
+	// A bulk edit sends one modify event per file. Redraw the view at most two times each second.
+	private queueRedraw = debounce(() => { if (!this.unloaded) this.redraw(); }, 500, false);
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
 		const config = normalizePath(this.app.vault.configDir);
 		const own = normalizePath(this.manifest.dir ?? `${config}/plugins/${this.manifest.id}`);
-		this.watch = new Watch(this.app.vault.adapter, config, own, () => this.redraw(), (r, now) => this.alert(r, now));
+		this.watch = new Watch(this.app.vault.adapter, config, own, () => { this.queueRedraw(); }, (r, now) => this.alert(r, now));
 		this.watch.session = this.lastSession;
 		const pro = createGitHubSponsors(this.app, this.manifest.id, SPONSORS);
 		pro.init(); this.pro = pro; bindPro(pro);
@@ -81,7 +83,7 @@ export default class SyncChurnWatchPlugin extends Plugin {
 		return this.stopping;
 	}
 	private clearPoll(): void { if (this.timer !== null) window.clearInterval(this.timer); this.timer = null; }
-	onunload(): void { this.unloaded = true; this.clearPoll(); this.watch?.dispose(); resetPro(); }
+	onunload(): void { this.unloaded = true; this.queueRedraw.cancel(); this.clearPoll(); this.watch?.dispose(); resetPro(); }
 	redraw(): void {
 		this.status?.setText(this.watch?.active ? 'Churn watch: on · click to stop' : 'Churn watch: off · click to start');
 		for (const leaf of this.app.workspace.getLeavesOfType(VIEW_ID)) if (leaf.view instanceof ChurnView) leaf.view.render();

@@ -12,7 +12,16 @@ export class ChurnView extends ItemView {
 	async onOpen(): Promise<void> { this.render(); await Promise.resolve(); }
 	async onClose(): Promise<void> { await Promise.resolve(); }
 	render(): void {
-		const el = this.contentEl; el.empty(); el.addClass('sync-churn-watch');
+		const el = this.contentEl;
+		// A poll redraws the view. Keep the scroll position and the expanded history.
+		const scroll = el.scrollTop;
+		const open = new Set(Array.from(el.querySelectorAll('details[open]'), (d) => d.getAttribute('data-key')));
+		el.empty(); el.addClass('sync-churn-watch');
+		this.draw(el);
+		for (const d of Array.from(el.querySelectorAll('details'))) if (open.has(d.getAttribute('data-key'))) d.open = true;
+		el.scrollTop = scroll;
+	}
+	private draw(el: HTMLElement): void {
 		const watch = this.owner.watch;
 		el.createEl('h2', { text: this.owner.manifest.name });
 		el.createEl('p', { text: watch.active ? 'Watching · settings checked each 10 seconds' : watch.session ? 'Session stopped · results kept' : 'No session', cls: 'sync-churn-state' });
@@ -41,9 +50,9 @@ export class ChurnView extends ItemView {
 				meter.textContent = String(count); bar.createSpan({ text: String(count) });
 			}
 		}
-		const list = el.createEl('details'); list.createEl('summary', { text: 'Saved sessions' });
+		const list = el.createEl('details', { attr: { 'data-key': 'saved' } }); list.createEl('summary', { text: 'Saved sessions' });
 		for (const s of [...history].reverse()) {
-			const item = list.createEl('details');
+			const item = list.createEl('details', { attr: { 'data-key': String(s.started) } });
 			item.createEl('summary', { text: `${new Date(s.started).toLocaleString()} · ${s.rows.reduce((n, r) => n + r.writes, 0)} writes` });
 			for (const row of sortedRows(s.rows)) item.createEl('p', { text: `${row.path} · ${row.writes} writes · ${row.bytes} estimated bytes` });
 		}
