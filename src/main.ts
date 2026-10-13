@@ -27,7 +27,7 @@ export default class SyncChurnWatchPlugin extends Plugin {
 		const own = normalizePath(this.manifest.dir ?? `${config}/plugins/${this.manifest.id}`);
 		this.watch = new Watch(this.app.vault.adapter, config, own, () => { this.queueRedraw(); }, (r, now) => this.alert(r, now));
 		this.watch.session = this.lastSession;
-		const pro = createGitHubSponsors(this.app, this.manifest.id, SPONSORS);
+		const pro = createGitHubSponsors(this.app, this.manifest.id, SPONSORS, this);
 		pro.init(); this.pro = pro; bindPro(pro);
 		this.settingTab = new SyncChurnWatchSettingTab(this.app, this);
 		this.addSettingTab(this.settingTab);

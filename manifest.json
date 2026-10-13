@@ -1,7 +1,7 @@
 {
 	"id": "sync-churn-watch",
 	"name": "Sync Churn Watch",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"minAppVersion": "1.13.4",
 	"description": "Find the files and settings that your vault rewrites most often, so you can see what fills your sync history.",
 	"author": "Michael Lip",

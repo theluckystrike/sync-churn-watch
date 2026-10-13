@@ -1,6 +1,6 @@
 {
 	"name": "sync-churn-watch",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"private": true,
 	"description": "Find the files and settings that your vault rewrites most often, so you can see what fills your sync history.",
 	"main": "main.js",
