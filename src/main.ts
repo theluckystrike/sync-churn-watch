@@ -6,6 +6,8 @@ import { DEFAULT_SETTINGS, SyncChurnWatchSettingTab, normalizeSettings, type Syn
 import { Watch, POLL_MS, exclusionFolders, markdown, type Row, type Session } from './watch';
 import { ChurnView, VIEW_ID } from './view';
 import { savedSessions } from './storage';
+import { setupHello } from './hello/index';
+import WHATS_NEW from './whats-new.json';
 
 export default class SyncChurnWatchPlugin extends Plugin {
 	settings: SyncChurnWatchSettings = { ...DEFAULT_SETTINGS };
@@ -22,6 +24,8 @@ export default class SyncChurnWatchPlugin extends Plugin {
 	private queueRedraw = debounce(() => { if (!this.unloaded) this.redraw(); }, 500, false);
 
 	async onload(): Promise<void> {
+		// First: "What's new" reads its state before the settings load (packages/hello). It does not wait.
+		setupHello(this, WHATS_NEW);
 		await this.loadSettings();
 		const config = normalizePath(this.app.vault.configDir);
 		const own = normalizePath(this.manifest.dir ?? `${config}/plugins/${this.manifest.id}`);

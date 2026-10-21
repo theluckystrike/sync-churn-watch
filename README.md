@@ -68,6 +68,8 @@ Open the command palette and run “Open the watch view”. Start a session befo
 
 ## Settings
 
+After a minor or major update, this plugin opens one What's new tab in the background. The tab and settings card suggest other NoteMods plugins and Zovo Chat and link to notemods.com for feedback ([privacy](https://notemods.com/privacy/)). The tab sends no data. Turn the tab off in Settings.
+
 The polling interval is fixed at ten seconds. Rate notices start off. Their threshold defaults to 120 writes per hour and accepts values from 1 to 100,000. These Pro controls keep their changes in memory until you stop a session. The same save stores the last stopped table and, with Pro on, its history entry. Repeated stop calls for that stopped session do not save again.
 
 ## FAQ

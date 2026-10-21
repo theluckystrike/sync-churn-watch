@@ -11,7 +11,10 @@ describe('Sync Churn Watch in Obsidian', function () {
 			const p = (app as unknown as { plugins: { plugins: Record<string, SyncChurnWatchPlugin> } }).plugins.plugins['sync-churn-watch']!;
 			await p.stopSession(); p.watch.session = null; await p.openView(); p.redraw();
 		});
-		expect(await browser.$('.sync-churn-state').getText()).toBe('No session');
+		// The first reveal of the right sidebar can still be laid out when the call returns (seen on 1.14.4).
+		const state = browser.$('.sync-churn-state');
+		await state.waitForDisplayed({ timeout: 5000 });
+		expect(await state.getText()).toBe('No session');
 	});
 	it('counts three settings writes and labels the lower bound', async () => {
 		const state = await browser.executeObsidian(async ({ app }) => {
