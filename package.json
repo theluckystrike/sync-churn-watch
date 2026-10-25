@@ -1,5 +1,6 @@
 {
 	"name": "sync-churn-watch",
+	"repository": {"type": "git", "url": "theluckystrike/sync-churn-watch.git"},
 	"version": "1.1.0",
 	"private": true,
 	"description": "Find the files and settings that your vault rewrites most often, so you can see what fills your sync history.",
