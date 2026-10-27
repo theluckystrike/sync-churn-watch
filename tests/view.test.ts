@@ -27,7 +27,7 @@ describe('watch view redraws', () => {
 	it('keeps the scroll position and open history after a poll redraw', async () => {
 		const app = App.createConfigured__({ files: { 'A.md': 'hello' } });
 		const p = new SyncChurnWatchPlugin(app as never, manifest as never);
-		bindPro({ isPro: () => true, onChange: () => () => {} } as never);
+		bindPro({ isPro: () => true, getState: () => ({ status: 'signed-out', lastAttemptAt: 0 }), hasToken: () => false, config: { sponsorLogin: 'theluckystrike' }, onChange: () => () => {} } as never);
 		p.watch = { active: true, session: { started: 0, stopped: null, rows: [], days: {} }, unreadable: 0 } as never;
 		p.history = [{ started: 1000, stopped: 2000, rows: [{ path: 'A.md', name: 'A.md', group: 'vault', writes: 2, bytes: 4 }], days: { '2026-10-12': 2 } }];
 		const view = new ChurnView(app.workspace.getLeaf(false) as never, p);

@@ -1,7 +1,7 @@
 import { Notice, Plugin, TFile, debounce, normalizePath } from 'obsidian';
 import type { SponsorsManager } from './license/index';
 import { createGitHubSponsors } from './license/github-obsidian';
-import { SPONSORS, PRO_LABEL, SYNC_LABEL, bindPro, isPro, onProChange, resetPro } from './pro';
+import { SPONSORS, PRO_LABEL, SYNC_LABEL, bindPro, isPro, onProChange, resetPro, proNotice } from './pro';
 import { DEFAULT_SETTINGS, SyncChurnWatchSettingTab, normalizeSettings, type SyncChurnWatchSettings } from './settings';
 import { Watch, POLL_MS, exclusionFolders, markdown, type Row, type Session } from './watch';
 import { ChurnView, VIEW_ID } from './view';
@@ -100,7 +100,7 @@ export default class SyncChurnWatchPlugin extends Plugin {
 	}
 	async copyResults(): Promise<void> { await this.copyText(markdown(this.watch.session, Date.now()), 'Results copied as Markdown.'); }
 	async copyExclusions(): Promise<void> {
-		if (!isPro()) { new Notice(`Folder suggestions need ${PRO_LABEL}. Core counts and Markdown copy are free.`); return; }
+		if (!isPro()) { proNotice(`Folder suggestions need ${PRO_LABEL}. Core counts and Markdown copy are free.`); return; }
 		const folders = exclusionFolders(this.watch.session);
 		if (!folders.length) { new Notice('No folder suggestions from this session.'); return; }
 		await this.copyText(folders.join('\n'), 'Folders copied. Review the list before you change Sync.');

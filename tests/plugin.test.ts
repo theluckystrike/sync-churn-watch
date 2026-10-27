@@ -12,7 +12,7 @@ function plugin(pro = false) {
 	const app = App.createConfigured__({ files: { 'A.md': 'hello' } });
 	const p = new SyncChurnWatchPlugin(app as never, manifest as never);
 	const f = fixture(); p.watch = f.watch; p.redraw = vi.fn();
-	bindPro({ isPro: () => pro, onChange: () => () => {} } as never);
+	bindPro({ isPro: () => pro, getState: () => ({ status: 'signed-out', lastAttemptAt: 0 }), hasToken: () => false, config: { sponsorLogin: 'theluckystrike' }, onChange: () => () => {} } as never);
 	vi.spyOn(p, 'saveData').mockResolvedValue();
 	return { p, f };
 }

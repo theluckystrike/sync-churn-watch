@@ -1,16 +1,9 @@
 {
 	"id": "sync-churn-watch",
 	"name": "Sync Churn Watch",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"changes": [
-		"New Send feedback command. It opens a page where you can report a problem or suggest an idea.",
-		"Redraws the watch view at most two times each second during bulk edits.",
-		"Adds free watch sessions, settings checks, note event counts and Markdown copy."
-	],
-	"changes_user": [
-		"New Send feedback command. It opens a page where you can report a problem or suggest an idea.",
-		"During bulk edits, the watch view redraws at most twice a second, so it stays usable.",
-		"The watch view keeps its scroll position and open session history after a settings check."
+		"The Pro notice for folder suggestions in Sync Churn Watch now has a Sponsor on GitHub button."
 	],
 	"tip": "Run Copy results as Markdown to put a write table on the clipboard.",
 	"thanks": "Hi, I am Michael, a solo developer in Poland. Sync Churn Watch is one of over 100 small plugins that I make. Thank you for using it to keep your sync history in check.",
